@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.users.cars.usersandheircars.dto.AuthenticationUserDTO;
+import com.project.users.cars.usersandheircars.dto.LoginTokenResponseDTO;
 import com.project.users.cars.usersandheircars.dto.UsersDTO;
 import com.project.users.cars.usersandheircars.entities.Users;
+import com.project.users.cars.usersandheircars.security.TokenUserService;
 import com.project.users.cars.usersandheircars.services.UsersCarsService;
 
 import jakarta.validation.Valid;
@@ -25,6 +30,12 @@ public class UserCarController {
 	
 	@Autowired
 	private UsersCarsService usersService;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private TokenUserService tokenUserService;
 	
 	@PostMapping(value = "/users")
 	public ResponseEntity<String> saveUserCar(@Valid @RequestBody UsersDTO usersDTO) {
@@ -54,6 +65,15 @@ public class UserCarController {
 	public ResponseEntity<String> updateUserCar(@Valid @RequestBody UsersDTO usersDTO, @PathVariable Long id) {
 		String obj = usersService.updateUserCars(usersDTO, id);
 		return ResponseEntity.ok().body(obj);		
+	}
+	
+	@PostMapping(value = "/signin")
+	public ResponseEntity<?> login(@Valid @RequestBody AuthenticationUserDTO authenticationUserDTO) {
+		var userPassword = new UsernamePasswordAuthenticationToken(authenticationUserDTO.login(), authenticationUserDTO.password());
+		var authUserPassword = this.authenticationManager.authenticate(userPassword);
+		var userToken = tokenUserService.generateUserToken((Users) authUserPassword.getPrincipal());
+		
+		return ResponseEntity.ok(new LoginTokenResponseDTO(userToken));
 	}
 
 }

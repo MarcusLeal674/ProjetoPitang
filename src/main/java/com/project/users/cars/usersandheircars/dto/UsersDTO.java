@@ -3,6 +3,8 @@ package com.project.users.cars.usersandheircars.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.project.users.cars.usersandheircars.enums.UsersEnum;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -33,6 +35,5 @@ public class UsersDTO {
 	
 	private List<CarsDTO> cars;	
 	
-	@NotBlank(message = "Missing fields")
-	private String hole;
+	private UsersEnum role;
 }

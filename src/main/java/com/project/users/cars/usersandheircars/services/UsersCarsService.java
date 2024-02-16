@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.users.cars.usersandheircars.dto.CarsDTO;
@@ -57,6 +58,7 @@ public class UsersCarsService {
 			return "Login already exists";
 		} else {
 			List<Cars> listCars = this.addCars(usersDTO);				
+			String cryptPassword = this.cryptedPassword(usersDTO.getPassword());
 			
 			users.setBirthday(usersDTO.getBirthday());
 			users.setCars(listCars);
@@ -64,8 +66,9 @@ public class UsersCarsService {
 			users.setFirstName(usersDTO.getFirstName());
 			users.setLastName(usersDTO.getLastName());
 			users.setLogin(usersDTO.getLogin());
-			users.setPassword(usersDTO.getPassword());
-			users.setPhone(usersDTO.getPhone());			
+			users.setPassword(cryptPassword);
+			users.setPhone(usersDTO.getPhone());
+			users.setRole(usersDTO.getRole());
 			usersRepository.save(users);
 			
 			this.updateCar(usersDTO.getCars(), users);			
@@ -89,8 +92,14 @@ public class UsersCarsService {
 
 	private void saveUser(UsersDTO usersDTO, Users user) {
 		List<Cars> listCars = addCars(usersDTO);
+		String cryptPassword = this.cryptedPassword(user.getPassword());
+		user.setPassword(cryptPassword);
 		user.setCars(listCars);
 		usersRepository.save(user);
+	}
+	
+	private String cryptedPassword(String password) {
+		return new BCryptPasswordEncoder().encode(password);
 	}
 	
 	private void saveCars(UsersDTO usersDTO, Users user) {		
@@ -114,6 +123,7 @@ public class UsersCarsService {
 		user.setLogin(usersDTO.getLogin());
 		user.setPassword(usersDTO.getPassword());
 		user.setPhone(usersDTO.getPhone());
+		user.setRole(usersDTO.getRole());
 		return user;
 	}
 	

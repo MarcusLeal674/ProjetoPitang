@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.project.users.cars.usersandheircars.enums.UsersEnum;
@@ -54,13 +55,19 @@ public class Users implements  UserDetails {
 	@OneToMany(mappedBy = "users")
 	private List<Cars> cars;
 	
-	@Column(name = "hole")
-	private UsersEnum hole;
+	@Column(name = "role")
+	private UsersEnum role;
+	
+	public Users(String login, String password, UsersEnum role) {
+		this.login = login;
+		this.password = password;
+		this.role = role;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		 if(this.role == UsersEnum.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+	        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
 	}
 
 	@Override
