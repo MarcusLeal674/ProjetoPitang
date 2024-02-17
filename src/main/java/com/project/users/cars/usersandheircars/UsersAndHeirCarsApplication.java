@@ -15,6 +15,7 @@ import com.project.users.cars.usersandheircars.entities.Users;
 import com.project.users.cars.usersandheircars.enums.UsersEnum;
 import com.project.users.cars.usersandheircars.repositories.CarsRepository;
 import com.project.users.cars.usersandheircars.repositories.UsersRepository;
+import com.project.users.cars.usersandheircars.utils.UserCarUtility;
 
 @SpringBootApplication
 public class UsersAndHeirCarsApplication  implements CommandLineRunner {
@@ -45,11 +46,11 @@ public class UsersAndHeirCarsApplication  implements CommandLineRunner {
 		users.setPassword(new BCryptPasswordEncoder().encode("123456"));
 		users.setPhone("987623456");
 		users.setRole(UsersEnum.ADMIN);
+		users.setCreatedAt(UserCarUtility.getDateTime());
 		
 		Cars cars = new Cars();
 		cars.setAno(2021);
 		cars.setColor("Prata");
-		cars.setIdCars(1L);
 		cars.setLicensePlate("LAB-4589");
 		cars.setModel("Honda Civic");
 		cars.setUsers(users);

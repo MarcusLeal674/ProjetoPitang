@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.project.users.cars.usersandheircars.enums.UsersEnum;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,11 +53,16 @@ public class Users implements  UserDetails {
 	@Column(name = "phone")
 	private String phone;
 	
-	@OneToMany(mappedBy = "users")
+	@OneToMany(mappedBy = "users", cascade = CascadeType.REMOVE)
 	private List<Cars> cars;
 	
 	@Column(name = "role")
 	private UsersEnum role;
+	
+	@Column(name = "createdAt")
+	private String createdAt;
+	
+	private String lastLogin;
 	
 	public Users(String login, String password, UsersEnum role) {
 		this.login = login;

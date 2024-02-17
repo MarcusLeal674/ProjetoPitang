@@ -7,5 +7,5 @@ import com.project.users.cars.usersandheircars.entities.Cars;
 
 @Repository
 public interface CarsRepository extends JpaRepository<Cars, Long> {
-	
+	boolean existsByLicensePlate(String licensePlate);
 }

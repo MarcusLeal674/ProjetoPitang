@@ -13,9 +13,10 @@ import com.project.users.cars.usersandheircars.entities.Cars;
 import com.project.users.cars.usersandheircars.entities.Users;
 import com.project.users.cars.usersandheircars.repositories.CarsRepository;
 import com.project.users.cars.usersandheircars.repositories.UsersRepository;
+import com.project.users.cars.usersandheircars.utils.UserCarUtility;
 
 @Service
-public class UsersCarsService {
+public class UsersService {
 	
 	@Autowired
 	private UsersRepository usersRepository;
@@ -24,7 +25,7 @@ public class UsersCarsService {
 	private CarsRepository carsRepository;
 	
 	public List<Users> findUsersAll() {
-		return usersRepository.findAll();
+		return this.usersRepository.findAll();
 	}
 	
 	public String saveUserCars(UsersDTO usersDTO) {
@@ -41,27 +42,25 @@ public class UsersCarsService {
 		}
 	}
 	
-	public void DeleteUser(Long id) {
-		usersRepository.deleteById(id);
+	public void deleteUser(Long id) {
+		this.usersRepository.deleteById(id);
 	}
 	
 	public Users findUser(Long id) {
-		return usersRepository.findById(id).get();
+		return this.usersRepository.findById(id).get();
 	}
 	
-	public String updateUserCars(UsersDTO usersDTO, Long id) {
-		var users = this.findUser(id);
+	public String updateUser(UsersDTO usersDTO, Long id) {
 		
 		if(this.validateEmail(usersDTO.getEmail())) {
 			return "Email already exists";
 		} else if (this.validateLogin(usersDTO.getLogin())) {
 			return "Login already exists";
 		} else {
-			List<Cars> listCars = this.addCars(usersDTO);				
+			var users = this.findUser(id);
 			String cryptPassword = this.cryptedPassword(usersDTO.getPassword());
 			
 			users.setBirthday(usersDTO.getBirthday());
-			users.setCars(listCars);
 			users.setEmail(usersDTO.getEmail());
 			users.setFirstName(usersDTO.getFirstName());
 			users.setLastName(usersDTO.getLastName());
@@ -69,25 +68,11 @@ public class UsersCarsService {
 			users.setPassword(cryptPassword);
 			users.setPhone(usersDTO.getPhone());
 			users.setRole(usersDTO.getRole());
-			usersRepository.save(users);
-			
-			this.updateCar(usersDTO.getCars(), users);			
+			usersRepository.save(users);		
 			
 			return "User successfully update";			
 		}			
 		
-	}
-
-	private void updateCar(List<CarsDTO> listCarsDTO, Users users) {
-		for (CarsDTO carsDTO : listCarsDTO) {
-			Cars car = carsRepository.findById(carsDTO.getIdCars()).get();
-			car.setAno(carsDTO.getYear());
-			car.setColor(carsDTO.getColor());
-			car.setLicensePlate(carsDTO.getLicensePlate());
-			car.setModel(carsDTO.getModel());
-			car.setUsers(users);
-			carsRepository.save(car);
-		}
 	}
 
 	private void saveUser(UsersDTO usersDTO, Users user) {
@@ -95,7 +80,7 @@ public class UsersCarsService {
 		String cryptPassword = this.cryptedPassword(user.getPassword());
 		user.setPassword(cryptPassword);
 		user.setCars(listCars);
-		usersRepository.save(user);
+		this.usersRepository.save(user);
 	}
 	
 	private String cryptedPassword(String password) {
@@ -110,7 +95,7 @@ public class UsersCarsService {
 			car.setModel(carsDTO.getModel());
 			car.setAno(carsDTO.getYear());
 			car.setUsers(user);
-			carsRepository.save(car);
+			this.carsRepository.save(car);
 		}
 	}
 
@@ -124,6 +109,7 @@ public class UsersCarsService {
 		user.setPassword(usersDTO.getPassword());
 		user.setPhone(usersDTO.getPhone());
 		user.setRole(usersDTO.getRole());
+		user.setCreatedAt(UserCarUtility.getDateTime());
 		return user;
 	}
 	
@@ -142,11 +128,11 @@ public class UsersCarsService {
 	}
 	
 	private boolean validateEmail(String email) {
-		return usersRepository.existsByEmail(email);
+		return this.usersRepository.existsByEmail(email);
 	}
 	
 	private boolean validateLogin(String login) {
-		return usersRepository.existsByLogin(login);
+		return this.usersRepository.existsByLogin(login);
 	}
 
 }

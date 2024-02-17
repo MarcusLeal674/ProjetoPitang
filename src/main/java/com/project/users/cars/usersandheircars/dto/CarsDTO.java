@@ -6,9 +6,8 @@ import lombok.Data;
 @Data
 public class CarsDTO {
 	
-	private Long idCars;
+private Long idCars;
 	
-	@NotBlank(message = "Missing fields")
 	private int year;
 	
 	@NotBlank(message = "Missing fields")
