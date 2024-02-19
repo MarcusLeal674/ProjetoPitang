@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 public class UsersDTO {	
 	
+	private Long idUsers;
+	
 	@NotBlank(message = "Missing fields")
 	private String firstName;
 	

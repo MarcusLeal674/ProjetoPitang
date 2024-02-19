@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.project.users.cars.usersandheircars.dto.AuthenticationUserDTO;
 import com.project.users.cars.usersandheircars.dto.CarsDTO;
+import com.project.users.cars.usersandheircars.dto.UsersDTO;
 import com.project.users.cars.usersandheircars.entities.Cars;
 import com.project.users.cars.usersandheircars.entities.Users;
 import com.project.users.cars.usersandheircars.enums.UsersEnum;
@@ -38,6 +40,12 @@ public class Objects {
 		return listCars;
 	}
 	
+	public List<CarsDTO> listCarsDTO() {
+		List<CarsDTO> listCarsDTO = new ArrayList<>();
+		listCarsDTO.add(this.objectCarsDTO());
+		return listCarsDTO;
+	}
+	
 	public Users objectUsers() {
 		var users = new Users();
 		users.setBirthday(new Date());
@@ -53,6 +61,32 @@ public class Objects {
 		users.setPhone("8196969699");
 		users.setRole(UsersEnum.ADMIN);
 		return users;
+	}
+	
+	public UsersDTO objectUsersDTO() {
+		var usersDTO = new UsersDTO();
+		usersDTO.setBirthday(new Date());
+		usersDTO.setCars(this.listCarsDTO());
+		usersDTO.setEmail("testeDTO@com.br");
+		usersDTO.setFirstName("TesteDTO");
+		usersDTO.setIdUsers(1L);
+		usersDTO.setLastName("teseDTO");
+		usersDTO.setLogin("testDTO");
+		usersDTO.setPassword("7890");
+		usersDTO.setPhone("1198457632");
+		usersDTO.setRole(UsersEnum.USER);
+		return usersDTO;
+	}
+	
+	public List<Users> objectListUsers() {
+		List<Users> listUsers = new ArrayList<>();
+		listUsers.add(this.objectUsers());
+		return listUsers;
+	}
+	
+	public AuthenticationUserDTO objectAuthenticationUserDTO() {
+		var authenticationUserDTO = new AuthenticationUserDTO("ADMIN", "123456");
+		return authenticationUserDTO;
 	}
 
 }
