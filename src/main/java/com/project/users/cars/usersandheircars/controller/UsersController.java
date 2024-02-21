@@ -27,6 +27,7 @@ import com.project.users.cars.usersandheircars.utils.UserCarUtility;
 
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/api")
 public class UsersController {
